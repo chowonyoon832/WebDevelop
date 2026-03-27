@@ -2,26 +2,47 @@
 @model ConstructionSurvey.Pages.ResultsModel
 @{
     ViewData["Title"] = "결과 현황";
+    // 날짜 파라미터를 유지하기 위한 헬퍼
+    var dateParam = !string.IsNullOrEmpty(Model.Date) ? $"&Date={Model.Date}" : "";
+    var dateOnly = !string.IsNullOrEmpty(Model.Date) ? $"?Date={Model.Date}" : "";
 }
 
 <div class="results-page">
     <h2 class="results-title">설문 결과 현황</h2>
 
+    <!-- 날짜 필터 -->
+    @if (Model.AvailableDates.Count > 0)
+    {
+        <div class="date-filter-bar">
+            <span class="date-filter-label">날짜 선택</span>
+            <div class="date-filter-options">
+                <a href="/Results@(!string.IsNullOrEmpty(Model.Filter) ? $"?Filter={Model.Filter}" : "")"
+                   class="date-chip @(string.IsNullOrEmpty(Model.Date) ? "date-chip-active" : "")">전체 날짜</a>
+                @foreach (var date in Model.AvailableDates)
+                {
+                    var filterParam = !string.IsNullOrEmpty(Model.Filter) ? $"&Filter={Model.Filter}" : "";
+                    <a href="/Results?Date=@date@filterParam"
+                       class="date-chip @(Model.Date == date ? "date-chip-active" : "")">@date</a>
+                }
+            </div>
+        </div>
+    }
+
     <!-- 요약 카드 -->
     <div class="stats-row">
-        <a href="/Results" class="stat-card stat-card-total">
+        <a href="/Results@dateOnly" class="stat-card stat-card-total">
             <div class="stat-number">@Model.TotalCount</div>
             <div class="stat-label">전체</div>
         </a>
-        <a href="/Results?Filter=양호" class="stat-card stat-card-green">
+        <a href="/Results?Filter=양호@dateParam" class="stat-card stat-card-green">
             <div class="stat-number">@Model.GreenCount</div>
             <div class="stat-label">양호</div>
         </a>
-        <a href="/Results?Filter=주의" class="stat-card stat-card-yellow">
+        <a href="/Results?Filter=주의@dateParam" class="stat-card stat-card-yellow">
             <div class="stat-number">@Model.YellowCount</div>
             <div class="stat-label">주의</div>
         </a>
-        <a href="/Results?Filter=위험" class="stat-card stat-card-red">
+        <a href="/Results?Filter=위험@dateParam" class="stat-card stat-card-red">
             <div class="stat-number">@Model.RedCount</div>
             <div class="stat-label">위험</div>
         </a>
@@ -29,10 +50,10 @@
 
     <!-- 필터 바 -->
     <div class="filter-bar">
-        <a href="/Results" class="filter-link @(string.IsNullOrEmpty(Model.Filter) ? "filter-active" : "filter-inactive")">전체</a>
-        <a href="/Results?Filter=양호" class="filter-link @(Model.Filter == "양호" ? "filter-active" : "filter-inactive")">양호</a>
-        <a href="/Results?Filter=주의" class="filter-link @(Model.Filter == "주의" ? "filter-active" : "filter-inactive")">주의</a>
-        <a href="/Results?Filter=위험" class="filter-link @(Model.Filter == "위험" ? "filter-active" : "filter-inactive")">위험</a>
+        <a href="/Results@dateOnly" class="filter-link @(string.IsNullOrEmpty(Model.Filter) ? "filter-active" : "filter-inactive")">전체</a>
+        <a href="/Results?Filter=양호@dateParam" class="filter-link @(Model.Filter == "양호" ? "filter-active" : "filter-inactive")">양호</a>
+        <a href="/Results?Filter=주의@dateParam" class="filter-link @(Model.Filter == "주의" ? "filter-active" : "filter-inactive")">주의</a>
+        <a href="/Results?Filter=위험@dateParam" class="filter-link @(Model.Filter == "위험" ? "filter-active" : "filter-inactive")">위험</a>
     </div>
 
     @if (Model.Submissions.Count == 0)

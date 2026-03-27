@@ -544,6 +544,56 @@ body:has(.results-page) main {
     margin-bottom: 20px;
 }
 
+/* Date Filter */
+.date-filter-bar {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.date-filter-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 10px;
+}
+
+.date-filter-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.date-chip {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    transition: all 0.15s;
+}
+
+.date-chip:hover {
+    background: #e5e7eb;
+}
+
+.date-chip-active {
+    background: #1e40af;
+    color: #fff;
+    border-color: #1e40af;
+}
+
+.date-chip-active:hover {
+    background: #1e3a8a;
+}
+
 /* Stats Cards */
 .stats-row {
     display: flex;
