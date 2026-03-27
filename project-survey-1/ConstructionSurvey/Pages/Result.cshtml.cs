@@ -26,9 +26,24 @@ public class ResultModel : PageModel
         _jsonService = jsonService;
     }
 
-    public IActionResult OnGet()
+    public IActionResult OnGet(string? id)
     {
-        return RedirectToPage("/Index");
+        if (string.IsNullOrEmpty(id))
+            return RedirectToPage("/Index");
+
+        var submission = _jsonService.GetSubmission(id);
+        if (submission == null)
+            return RedirectToPage("/Index");
+
+        WorkerName = submission.Name;
+        Company = submission.Company;
+        Trade = submission.Trade;
+        AccessTime = submission.AccessTime;
+        SubmitTime = submission.SubmitTime;
+        Duration = submission.Duration;
+        Result = _scoringService.Calculate(submission.Answers);
+
+        return Page();
     }
 
     public IActionResult OnPost()
@@ -101,8 +116,11 @@ public class ResultModel : PageModel
             CriticalFlags = criticalFlagsText
         };
 
-        _jsonService.SaveSubmission(submission);
+        var savedId = _jsonService.SaveSubmission(submission);
+        if (savedId == null)
+            return RedirectToPage("/Index");
 
-        return Page();
+        // PRG 패턴: POST 후 GET으로 리다이렉트하여 새로고침 시 중복 저장 방지
+        return RedirectToPage("/Result", new { id = savedId });
     }
 }

@@ -23,7 +23,7 @@ public class JsonResultService
         };
     }
 
-    public bool SaveSubmission(SurveySubmission submission)
+    public string? SaveSubmission(SurveySubmission submission)
     {
         try
         {
@@ -36,12 +36,30 @@ public class JsonResultService
             File.WriteAllText(filePath, json);
 
             _logger.LogInformation("Survey result saved: {FileName}", fileName);
-            return true;
+            return Path.GetFileNameWithoutExtension(fileName);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to save survey result for {Name}", submission.Name);
-            return false;
+            return null;
+        }
+    }
+
+    public SurveySubmission? GetSubmission(string id)
+    {
+        try
+        {
+            var filePath = Path.Combine(_resultsPath, id + ".json");
+            if (!File.Exists(filePath))
+                return null;
+
+            var json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<SurveySubmission>(json, _jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to read survey file: {Id}", id);
+            return null;
         }
     }
 

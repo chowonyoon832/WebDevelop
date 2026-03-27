@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version)",
+      "Bash(chmod:*)",
+      "Bash(crontab:*)",
+      "Bash(brew --prefix)",
+      "Bash(brew install:*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}
