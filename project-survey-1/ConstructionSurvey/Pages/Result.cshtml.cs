@@ -9,7 +9,7 @@ public class ResultModel : PageModel
 {
     private readonly ScoringService _scoringService;
     private readonly SurveyDataService _dataService;
-    private readonly ExcelResultService _excelService;
+    private readonly JsonResultService _jsonService;
 
     public SurveyResult Result { get; set; } = new();
     public string WorkerName { get; set; } = string.Empty;
@@ -19,11 +19,11 @@ public class ResultModel : PageModel
     public string SubmitTime { get; set; } = string.Empty;
     public string Duration { get; set; } = string.Empty;
 
-    public ResultModel(ScoringService scoringService, SurveyDataService dataService, ExcelResultService excelService)
+    public ResultModel(ScoringService scoringService, SurveyDataService dataService, JsonResultService jsonService)
     {
         _scoringService = scoringService;
         _dataService = dataService;
-        _excelService = excelService;
+        _jsonService = jsonService;
     }
 
     public IActionResult OnGet()
@@ -86,7 +86,7 @@ public class ResultModel : PageModel
             .ToList();
         var criticalFlagsText = flagTexts.Any() ? string.Join(" / ", flagTexts) : "없음";
 
-        // Save to Excel
+        // Save to JSON
         var submission = new SurveySubmission
         {
             Name = WorkerName,
@@ -101,7 +101,7 @@ public class ResultModel : PageModel
             CriticalFlags = criticalFlagsText
         };
 
-        _excelService.SaveSubmission(submission);
+        _jsonService.SaveSubmission(submission);
 
         return Page();
     }

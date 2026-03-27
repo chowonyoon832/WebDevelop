@@ -1,0 +1,92 @@
+@page
+@model ConstructionSurvey.Pages.ResultsModel
+@{
+    ViewData["Title"] = "결과 현황";
+}
+
+<div class="results-page">
+    <h2 class="results-title">설문 결과 현황</h2>
+
+    <!-- 요약 카드 -->
+    <div class="stats-row">
+        <a href="/Results" class="stat-card stat-card-total">
+            <div class="stat-number">@Model.TotalCount</div>
+            <div class="stat-label">전체</div>
+        </a>
+        <a href="/Results?Filter=양호" class="stat-card stat-card-green">
+            <div class="stat-number">@Model.GreenCount</div>
+            <div class="stat-label">양호</div>
+        </a>
+        <a href="/Results?Filter=주의" class="stat-card stat-card-yellow">
+            <div class="stat-number">@Model.YellowCount</div>
+            <div class="stat-label">주의</div>
+        </a>
+        <a href="/Results?Filter=위험" class="stat-card stat-card-red">
+            <div class="stat-number">@Model.RedCount</div>
+            <div class="stat-label">위험</div>
+        </a>
+    </div>
+
+    <!-- 필터 바 -->
+    <div class="filter-bar">
+        <a href="/Results" class="filter-link @(string.IsNullOrEmpty(Model.Filter) ? "filter-active" : "filter-inactive")">전체</a>
+        <a href="/Results?Filter=양호" class="filter-link @(Model.Filter == "양호" ? "filter-active" : "filter-inactive")">양호</a>
+        <a href="/Results?Filter=주의" class="filter-link @(Model.Filter == "주의" ? "filter-active" : "filter-inactive")">주의</a>
+        <a href="/Results?Filter=위험" class="filter-link @(Model.Filter == "위험" ? "filter-active" : "filter-inactive")">위험</a>
+    </div>
+
+    @if (Model.Submissions.Count == 0)
+    {
+        <div class="empty-state">
+            <p>아직 제출된 설문이 없습니다.</p>
+        </div>
+    }
+    else
+    {
+        <!-- 결과 테이블 -->
+        <div class="results-table-wrapper">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>소속업체</th>
+                        <th>공종</th>
+                        <th>접속시간</th>
+                        <th>제출시간</th>
+                        <th>소요시간</th>
+                        <th>총점</th>
+                        <th>위험등급</th>
+                        <th>위험 플래그</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var index = 1; }
+                    @foreach (var s in Model.Submissions)
+                    {
+                        var rowClass = s.RiskLevel switch
+                        {
+                            "양호" => "risk-green",
+                            "주의" => "risk-yellow",
+                            "위험" => "risk-red",
+                            _ => ""
+                        };
+                        <tr class="@rowClass">
+                            <td>@index</td>
+                            <td>@s.Name</td>
+                            <td>@s.Company</td>
+                            <td>@s.Trade</td>
+                            <td>@s.AccessTime</td>
+                            <td>@s.SubmitTime</td>
+                            <td>@s.Duration</td>
+                            <td><strong>@s.TotalScore</strong></td>
+                            <td><strong>@s.RiskLevel</strong></td>
+                            <td class="flags-cell">@s.CriticalFlags</td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
