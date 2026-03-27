@@ -17,7 +17,10 @@
       "Bash(grep -i \"dotnet$\")",
       "Read(//Users/chowon/Documents/WebDevelop/project-survey-1/$\\(brew --prefix\\)/share/dotnet/**)",
       "Bash(find / -name dotnet -type f)",
-      "Bash(cat /Users/chowon/Documents/WebDevelop/project-survey-1/ConstructionSurvey/Results/*.json)"
+      "Bash(cat /Users/chowon/Documents/WebDevelop/project-survey-1/ConstructionSurvey/Results/*.json)",
+      "Bash(for f:*)",
+      "Bash(do python3:*)",
+      "Bash(done)"
     ]
   }
 }

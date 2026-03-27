@@ -115,7 +115,17 @@
                             <td>@s.Duration</td>
                             <td><strong>@s.TotalScore</strong></td>
                             <td><strong>@s.RiskLevel</strong></td>
-                            <td class="flags-cell">@s.CriticalFlags</td>
+                            <td class="flags-cell">
+                                @if (s.CriticalFlags == "없음")
+                                {
+                                    <span class="flag-none">없음</span>
+                                }
+                                else
+                                {
+                                    var flagCount = s.CriticalFlags.Split(" / ").Length;
+                                    <button type="button" class="flag-btn" onclick="showFlags('@s.Name', '@Html.Raw(s.CriticalFlags.Replace("'", "\\'"))')">@(flagCount)건</button>
+                                }
+                            </td>
                         </tr>
                         index++;
                     }
@@ -123,6 +133,17 @@
             </table>
         </div>
     }
+
+    <!-- 위험 플래그 상세 모달 -->
+    <div class="flag-modal-overlay" id="flagModal" onclick="closeFlags(event)">
+        <div class="flag-modal">
+            <div class="flag-modal-header">
+                <span class="flag-modal-title" id="flagModalTitle">위험 플래그</span>
+                <button type="button" class="flag-modal-close" onclick="closeFlags(event)">&times;</button>
+            </div>
+            <ul class="flag-modal-list" id="flagModalList"></ul>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -203,5 +224,29 @@
 
     renderCalendar();
 })();
+
+function showFlags(name, flagsText) {
+    var modal = document.getElementById('flagModal');
+    var title = document.getElementById('flagModalTitle');
+    var list = document.getElementById('flagModalList');
+
+    title.textContent = name + ' - 위험 플래그';
+
+    var flags = flagsText.split(' / ');
+    var html = '';
+    for (var i = 0; i < flags.length; i++) {
+        html += '<li>' + flags[i] + '</li>';
+    }
+    list.innerHTML = html;
+
+    modal.classList.add('flag-modal-open');
+}
+
+function closeFlags(e) {
+    var modal = document.getElementById('flagModal');
+    if (e.target === modal || e.target.classList.contains('flag-modal-close')) {
+        modal.classList.remove('flag-modal-open');
+    }
+}
 </script>
 }
