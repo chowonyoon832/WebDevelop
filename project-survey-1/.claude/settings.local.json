@@ -16,7 +16,8 @@
       "Bash(mdfind -name dotnet)",
       "Bash(grep -i \"dotnet$\")",
       "Read(//Users/chowon/Documents/WebDevelop/project-survey-1/$\\(brew --prefix\\)/share/dotnet/**)",
-      "Bash(find / -name dotnet -type f)"
+      "Bash(find / -name dotnet -type f)",
+      "Bash(cat /Users/chowon/Documents/WebDevelop/project-survey-1/ConstructionSurvey/Results/*.json)"
     ]
   }
 }
