@@ -81,21 +81,5 @@
         <p>@adviceText</p>
     </div>
 
-    @if (Model.Result.CriticalFlags.Any())
-    {
-        <div class="critical-warning">
-            <h3>&#9888; 주의가 필요한 문항</h3>
-            <ul>
-                @foreach (var flag in Model.Result.CriticalFlags)
-                {
-                    <li>
-                        <strong>문항 @flag.QuestionNumber</strong>: @flag.QuestionText
-                        <br /><span class="flag-reason">(@flag.Reason)</span>
-                    </li>
-                }
-            </ul>
-        </div>
-    }
-
     <a href="/" class="retry-btn">다시 검사하기</a>
 </div>
