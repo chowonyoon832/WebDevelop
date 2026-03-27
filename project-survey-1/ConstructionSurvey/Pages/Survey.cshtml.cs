@@ -20,7 +20,6 @@ public class SurveyModel : PageModel
     [BindProperty]
     public string Trade { get; set; } = string.Empty;
 
-    [BindProperty]
     public string AccessTime { get; set; } = string.Empty;
 
     public SurveyModel(SurveyDataService dataService)
@@ -40,6 +39,7 @@ public class SurveyModel : PageModel
             return RedirectToPage("/Index");
         }
 
+        AccessTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         Questions = _dataService.GetQuestions();
         return Page();
     }

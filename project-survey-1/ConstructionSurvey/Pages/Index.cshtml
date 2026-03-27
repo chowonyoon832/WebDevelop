@@ -11,8 +11,6 @@
 
     <form method="post" action="/Survey" id="info-form">
         @Html.AntiForgeryToken()
-        <input type="hidden" name="AccessTime" value="@Model.AccessTime" />
-
         <div class="info-card">
             <div class="info-field">
                 <label for="workerName">이름</label>
