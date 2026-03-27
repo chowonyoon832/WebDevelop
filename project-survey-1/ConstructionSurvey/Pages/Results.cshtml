@@ -10,21 +10,34 @@
 <div class="results-page">
     <h2 class="results-title">설문 결과 현황</h2>
 
-    <!-- 날짜 필터 -->
+    <!-- 날짜 필터 (달력) -->
     @if (Model.AvailableDates.Count > 0)
     {
         <div class="date-filter-bar">
-            <span class="date-filter-label">날짜 선택</span>
-            <div class="date-filter-options">
+            <div class="calendar-header-row">
+                <span class="date-filter-label">날짜 선택</span>
                 <a href="/Results@(!string.IsNullOrEmpty(Model.Filter) ? $"?Filter={Model.Filter}" : "")"
-                   class="date-chip @(string.IsNullOrEmpty(Model.Date) ? "date-chip-active" : "")">전체 날짜</a>
-                @foreach (var date in Model.AvailableDates)
-                {
-                    var filterParam = !string.IsNullOrEmpty(Model.Filter) ? $"&Filter={Model.Filter}" : "";
-                    <a href="/Results?Date=@date@filterParam"
-                       class="date-chip @(Model.Date == date ? "date-chip-active" : "")">@date</a>
-                }
+                   class="calendar-reset-btn @(string.IsNullOrEmpty(Model.Date) ? "calendar-reset-active" : "")">전체 날짜</a>
             </div>
+            @if (!string.IsNullOrEmpty(Model.Date))
+            {
+                <div class="calendar-selected-date">선택된 날짜: <strong>@Model.Date</strong></div>
+            }
+            <div class="calendar-nav">
+                <button type="button" class="calendar-nav-btn" id="calPrev">&lt;</button>
+                <span class="calendar-month-label" id="calMonthLabel"></span>
+                <button type="button" class="calendar-nav-btn" id="calNext">&gt;</button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-dow">일</div>
+                <div class="calendar-dow">월</div>
+                <div class="calendar-dow">화</div>
+                <div class="calendar-dow">수</div>
+                <div class="calendar-dow">목</div>
+                <div class="calendar-dow">금</div>
+                <div class="calendar-dow">토</div>
+            </div>
+            <div class="calendar-grid" id="calDays"></div>
         </div>
     }
 
@@ -111,3 +124,84 @@
         </div>
     }
 </div>
+
+@section Scripts {
+<script>
+(function() {
+    var availableDates = [@Html.Raw(string.Join(",", Model.AvailableDates.Select(d => $"\"{d}\"")))];
+    var selectedDate = "@(Model.Date ?? "")";
+    var currentFilter = "@(Model.Filter ?? "")";
+
+    var availableSet = {};
+    availableDates.forEach(function(d) { availableSet[d] = true; });
+
+    // 달력 초기 월: 선택된 날짜가 있으면 그 달, 없으면 가장 최근 날짜의 달
+    var initDate;
+    if (selectedDate) {
+        initDate = new Date(selectedDate + "T00:00:00");
+    } else if (availableDates.length > 0) {
+        initDate = new Date(availableDates[0] + "T00:00:00");
+    } else {
+        initDate = new Date();
+    }
+
+    var viewYear = initDate.getFullYear();
+    var viewMonth = initDate.getMonth();
+
+    var monthLabel = document.getElementById('calMonthLabel');
+    var daysContainer = document.getElementById('calDays');
+    var prevBtn = document.getElementById('calPrev');
+    var nextBtn = document.getElementById('calNext');
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function renderCalendar() {
+        monthLabel.textContent = viewYear + '년 ' + (viewMonth + 1) + '월';
+
+        var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+        var lastDate = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+        var html = '';
+
+        // 빈 칸
+        for (var i = 0; i < firstDay; i++) {
+            html += '<div class="calendar-day calendar-day-empty"></div>';
+        }
+
+        for (var d = 1; d <= lastDate; d++) {
+            var dateStr = viewYear + '-' + pad(viewMonth + 1) + '-' + pad(d);
+            var hasData = availableSet[dateStr];
+            var isSelected = dateStr === selectedDate;
+
+            var cls = 'calendar-day';
+            if (hasData) cls += ' calendar-day-has-data';
+            if (isSelected) cls += ' calendar-day-selected';
+            if (!hasData) cls += ' calendar-day-disabled';
+
+            if (hasData) {
+                var filterParam = currentFilter ? '&Filter=' + encodeURIComponent(currentFilter) : '';
+                html += '<a href="/Results?Date=' + dateStr + filterParam + '" class="' + cls + '">' + d + '</a>';
+            } else {
+                html += '<div class="' + cls + '">' + d + '</div>';
+            }
+        }
+
+        daysContainer.innerHTML = html;
+    }
+
+    prevBtn.addEventListener('click', function() {
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        renderCalendar();
+    });
+
+    nextBtn.addEventListener('click', function() {
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        renderCalendar();
+    });
+
+    renderCalendar();
+})();
+</script>
+}
