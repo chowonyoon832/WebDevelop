@@ -1,0 +1,92 @@
+@page
+@model ConstructionSurvey.Pages.IndexModel
+@{
+    ViewData["Title"] = "개인정보 입력";
+}
+
+<div class="info-container">
+    <div class="survey-intro">
+        <p>설문을 시작하기 전에 아래 정보를 입력해 주세요.</p>
+    </div>
+
+    <form method="post" action="/Survey" id="info-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="AccessTime" value="@Model.AccessTime" />
+
+        <div class="info-card">
+            <div class="info-field">
+                <label for="workerName">이름</label>
+                <input type="text" id="workerName" name="WorkerName" placeholder="이름을 입력하세요" required autocomplete="off" />
+            </div>
+
+            <div class="info-field">
+                <label for="company">소속업체</label>
+                <input type="text" id="company" name="Company" placeholder="소속업체명을 입력하세요" required autocomplete="off" />
+            </div>
+
+            <div class="info-field">
+                <label for="trade">공종</label>
+                <select id="trade" name="Trade" required>
+                    <option value="" disabled selected>공종을 선택하세요</option>
+                    <option value="철근공">철근공</option>
+                    <option value="형틀목공">형틀목공</option>
+                    <option value="콘크리트공">콘크리트공</option>
+                    <option value="조적공">조적공</option>
+                    <option value="미장공">미장공</option>
+                    <option value="방수공">방수공</option>
+                    <option value="도장공">도장공</option>
+                    <option value="타일공">타일공</option>
+                    <option value="비계공">비계공</option>
+                    <option value="배관공">배관공</option>
+                    <option value="전기공">전기공</option>
+                    <option value="용접공">용접공</option>
+                    <option value="소방설비">소방설비</option>
+                    <option value="장비운전">장비운전</option>
+                    <option value="토공">토공</option>
+                    <option value="포장공">포장공</option>
+                    <option value="측량">측량</option>
+                    <option value="안전관리">안전관리</option>
+                    <option value="기타">기타 (직접입력)</option>
+                </select>
+            </div>
+
+            <div class="info-field" id="trade-other-field" style="display: none;">
+                <label for="tradeOther">공종 직접입력</label>
+                <input type="text" id="tradeOther" placeholder="공종을 입력하세요" autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-btn" id="start-btn">설문 시작하기</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tradeSelect = document.getElementById('trade');
+            var otherField = document.getElementById('trade-other-field');
+            var otherInput = document.getElementById('tradeOther');
+
+            tradeSelect.addEventListener('change', function () {
+                if (this.value === '기타') {
+                    otherField.style.display = 'block';
+                    otherInput.required = true;
+                    otherInput.focus();
+                } else {
+                    otherField.style.display = 'none';
+                    otherInput.required = false;
+                    otherInput.value = '';
+                }
+            });
+
+            document.getElementById('info-form').addEventListener('submit', function (e) {
+                if (tradeSelect.value === '기타' && otherInput.value.trim()) {
+                    tradeSelect.name = '';
+                    otherInput.name = 'Trade';
+                }
+            });
+        });
+    </script>
+}

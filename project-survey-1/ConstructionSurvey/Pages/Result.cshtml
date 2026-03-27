@@ -1,0 +1,101 @@
+@page
+@model ConstructionSurvey.Pages.ResultModel
+@{
+    ViewData["Title"] = "결과";
+
+    string bannerClass, bannerIcon, bannerText, adviceText;
+    switch (Model.Result.RiskLevel)
+    {
+        case ConstructionSurvey.Models.RiskLevel.Green:
+            bannerClass = "result-green";
+            bannerIcon = "&#10004;";
+            bannerText = "안전 양호";
+            adviceText = "현재 심리/신체 상태가 양호합니다. 오늘도 안전하게 작업해 주세요!";
+            break;
+        case ConstructionSurvey.Models.RiskLevel.Yellow:
+            bannerClass = "result-yellow";
+            bannerIcon = "&#9888;";
+            bannerText = "주의 필요";
+            adviceText = "일부 항목에서 주의가 필요합니다. 작업 전 스트레칭과 충분한 수분 섭취를 권장합니다. 불편한 점이 있으면 현장 관리자에게 알려주세요.";
+            break;
+        default:
+            bannerClass = "result-red";
+            bannerIcon = "&#9888;";
+            bannerText = "즉각 조치 필요";
+            adviceText = "심리/신체 상태가 위험 수준입니다. 반드시 현장 관리자에게 보고하고, 무리한 작업을 피해 주세요. 필요 시 전문 상담을 받으시기 바랍니다.";
+            break;
+    }
+}
+
+<div class="result-container">
+    <div class="worker-info-summary">
+        <div class="info-row">
+            <span class="info-label">이름</span>
+            <span class="info-value">@Model.WorkerName</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">소속업체</span>
+            <span class="info-value">@Model.Company</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">공종</span>
+            <span class="info-value">@Model.Trade</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">접속시간</span>
+            <span class="info-value">@Model.AccessTime</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">제출시간</span>
+            <span class="info-value">@Model.SubmitTime</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">소요시간</span>
+            <span class="info-value">@Model.Duration</span>
+        </div>
+    </div>
+
+    <div class="result-banner @bannerClass">
+        <span class="result-icon">@Html.Raw(bannerIcon)</span>
+        <span class="result-label">@bannerText</span>
+    </div>
+
+    <div class="result-score">
+        <span class="score-number">@Model.Result.TotalScore</span>
+        <span class="score-total">/ 56점</span>
+    </div>
+
+    <div class="result-gauge">
+        <div class="gauge-bar">
+            <div class="gauge-section gauge-green" style="width:26.2%">양호</div>
+            <div class="gauge-section gauge-yellow" style="width:30.9%">주의</div>
+            <div class="gauge-section gauge-red" style="width:42.9%">위험</div>
+        </div>
+        <div class="gauge-marker" style="left:@(((Model.Result.TotalScore - 14.0) / 42.0 * 100).ToString("F1"))%">
+            <div class="marker-arrow">&#9650;</div>
+        </div>
+    </div>
+
+    <div class="result-advice">
+        <h3>권장 조치</h3>
+        <p>@adviceText</p>
+    </div>
+
+    @if (Model.Result.CriticalFlags.Any())
+    {
+        <div class="critical-warning">
+            <h3>&#9888; 주의가 필요한 문항</h3>
+            <ul>
+                @foreach (var flag in Model.Result.CriticalFlags)
+                {
+                    <li>
+                        <strong>문항 @flag.QuestionNumber</strong>: @flag.QuestionText
+                        <br /><span class="flag-reason">(@flag.Reason)</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <a href="/" class="retry-btn">다시 검사하기</a>
+</div>

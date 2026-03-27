@@ -1,0 +1,18 @@
+@page
+@model ConstructionSurvey.Pages.QrCodeModel
+@{
+    ViewData["Title"] = "QR코드";
+}
+
+<div class="qr-container">
+    <h2>설문 접속 QR코드</h2>
+    <p class="qr-url">대상 URL: @Model.TargetUrl</p>
+
+    <div class="qr-image">
+        <img src="data:image/png;base64,@Model.QrImageBase64" alt="QR코드" />
+    </div>
+
+    <p class="qr-instruction">이 QR코드를 인쇄하여 현장에 게시해 주세요.<br />근로자가 스마트폰으로 스캔하면 설문에 접속할 수 있습니다.</p>
+
+    <button class="print-btn" onclick="window.print()">인쇄하기</button>
+</div>
