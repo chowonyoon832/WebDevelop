@@ -10,19 +10,19 @@
             bannerClass = "result-green";
             bannerIcon = "&#10004;";
             bannerText = "안전 양호";
-            adviceText = "현재 심리/신체 상태가 양호합니다. 오늘도 안전하게 작업해 주세요!";
+            adviceText = "현재 심리·신체 상태가 양호합니다. 컨디션이 좋을 때도 방심하지 말고, 오늘 하루도 안전하게 마무리하세요.";
             break;
         case ConstructionSurvey.Models.RiskLevel.Yellow:
             bannerClass = "result-yellow";
             bannerIcon = "&#9888;";
             bannerText = "주의 필요";
-            adviceText = "일부 항목에서 주의가 필요합니다. 작업 전 스트레칭과 충분한 수분 섭취를 권장합니다. 불편한 점이 있으면 현장 관리자에게 알려주세요.";
+            adviceText = "일부 항목에서 평소보다 부담을 느끼고 계신 것으로 보입니다. 작업 중 무리하지 말고 한 템포 쉬어가셔도 괜찮습니다. 불편한 점이 있으면 현장 관리자에게 알려주세요.";
             break;
         default:
             bannerClass = "result-red";
             bannerIcon = "&#9888;";
-            bannerText = "즉각 조치 필요";
-            adviceText = "심리/신체 상태가 위험 수준입니다. 반드시 현장 관리자에게 보고하고, 무리한 작업을 피해 주세요. 필요 시 전문 상담을 받으시기 바랍니다.";
+            bannerText = "컨디션 관리 필요";
+            adviceText = "현재 심리·신체적으로 부담이 큰 상태입니다. 작업 전 현장 관리자나 동료에게 컨디션을 알려주세요. 내 상태를 먼저 돌보는 것이 안전의 시작입니다.";
             break;
     }
 }
@@ -77,7 +77,7 @@
     </div>
 
     <div class="result-advice">
-        <h3>권장 조치</h3>
+        <h3>오늘의 컨디션</h3>
         <p>@adviceText</p>
     </div>
 
