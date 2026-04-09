@@ -6,7 +6,8 @@
 ._*
 
 # Custom folder icons
-Icon
+Icon
+
 
 # Volume root files
 .DocumentRevisions-V100
@@ -135,3 +136,4 @@ out/
 .yarn/install-state.gz
 .pnp.*
 project-survey-1/ConstructionSurvey/Results
+settings.local.json
